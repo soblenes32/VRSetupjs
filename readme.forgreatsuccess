@@ -1,0 +1,25 @@
+*** About ***
+Important: This is an experimental library to ease access to an experimental VR API which may or may not ever be incorporated into a trunk build and is designed (primarily) to interface with a "development" VR HMD product. In other words, the current version probably won't work in 6 to 12 months.
+
+VRSetup is a consolidation and modularization of the code necessary to get your VR hmd working with one of the VR-enabled mozilla or chromium builds. As of this writing (08/28/2014) this code has been tested and is function with Chromium and the Oculus Rift DK2. However, please note that since the api for browser-based VR is in a state of flux, this implementation may or may not be functional in the future.
+
+Credit where credit is due: Much of the code in this package is a direct consolidation and copy of Brandon Jones' work into a reusable, plug-and-play format. Links follow:
+
+http://media.tojicode.com/webvr-test/
+http://media.tojicode.com/q3bsp/
+
+*** Usage ***
+Three easy steps are required to make use of this package:
+1) Include VRSetup.js in your code
+	<script src="./VRSetup.js"></script>
+	
+2) Initialize a VRSetup object 
+	g_vr = new VRSetup(g_renderer, g_scene);
+	
+3) Add the render() method into your requestAnimationFrame loop
+	var isSuccessfulRender = g_vr.render();
+	
+*** Special Prerequisites ***
+You must be using a VR-enabled browser, ie. Brandon Jones' VR branch build of chromium 
+src: https://chromium.googlesource.com/experimental/chromium/src/+/refs/wip/bajones/webvr
+build: https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&amp;usp=sharing#list

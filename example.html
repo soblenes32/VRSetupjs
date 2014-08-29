@@ -1,0 +1,105 @@
+<html>
+<head>
+	<title>Threejs VRSetup.js Example</title>
+
+	<!----------------------------------
+	-- THREEJS and supporting libraries
+	------------------------------------>
+	<script src="./jquery-1.11.1.min.js"></script>
+	<script src="./three.js"></script>
+
+	<!----------------------------------
+	-- Don't forget to include VRSetup!
+	------------------------------------>
+	<script src="./VRSetup.js"></script>
+
+	<!----------------------------------
+	-- Some styling to make it less ugly
+	------------------------------------>
+	<style>
+	body
+	{
+		font-family: Monospace;
+		font-weight: bold;
+		background-color: #ccccff;
+		margin: 0px;
+		overflow: hidden;
+	}
+	</style>
+
+
+	<script>
+		//Global references
+		var g_scene, g_renderer;
+		//Handle to the VRSetup object
+		var g_vr;
+		$( document ).ready( function(){
+			/*************************************
+			* Boilerplate THREEJS scene setup
+			**************************************/
+			this.containerEle = $(".threejs-container").get(0);
+
+			// SCENE
+			this.scene = new THREE.Scene();
+			g_scene = this.scene;
+			this.SCREEN_WIDTH = window.innerWidth;
+			this.SCREEN_HEIGHT = window.innerHeight;
+
+			//RENDERER
+			this.renderer = new THREE.WebGLRenderer({antialias:true});
+			g_renderer = this.renderer;
+			this.renderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+			this.containerEle.appendChild( g_renderer.domElement );
+
+			/************************************
+			* Render a cube and a light
+			*************************************/
+			// LIGHT
+			var light = new THREE.AmbientLight( 0x404040 );
+			g_scene.add( light );
+
+			// CUBE: cute, not ugly
+			var cute_cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshLambertMaterial( {color: 0x8888ff} ));
+			cute_cube.position.set(6,-7,-18);
+			g_scene.add( cute_cube );
+
+			/************************************
+			* Initialize the VRSetup object
+			*************************************/
+			g_vr = new VRSetup(g_renderer, g_scene);
+
+			//Since we don't have a "normal" camera in this example, we'll turn on VR mode right away!
+			//Otherwise, this method might be placed in the callback of a "turn on vr-mode" button
+			g_vr.RequestFullScreenVR();
+
+			/************************************
+			* Kick off the animation loop!
+			*************************************/
+			animate();
+
+		});
+
+		function animate(){
+			requestAnimationFrame( animate );
+
+			/************************************
+			* Execute the rendering. Returns
+			* false if VRMode is not enabled
+			*************************************/
+			var isSuccessfulRender = g_vr.render();
+			/******************************************
+			* If you have a "normal" perspective camera
+			* then you'll want to add something like this:
+			*
+			* if(!isSuccessfulRender){
+			*	g_renderer.render( g_scene, boringMonoCamera );
+			* }
+			*******************************************/
+		}
+	</script>
+
+</head>
+<body>
+	<div class="threejs-container"></div>
+</body>
+</html>
