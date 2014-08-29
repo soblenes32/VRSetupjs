@@ -68,9 +68,12 @@
 			*************************************/
 			g_vr = new VRSetup(g_renderer, g_scene);
 
-			//Since we don't have a "normal" camera in this example, we'll turn on VR mode right away!
-			//Otherwise, this method might be placed in the callback of a "turn on vr-mode" button
-			g_vr.RequestFullScreenVR();
+			/************************************
+			* Enable the VR
+			*************************************/
+			$("#start-button").click(function() {
+				g_vr.RequestFullScreenVR();
+			});
 
 			/************************************
 			* Kick off the animation loop!
@@ -88,8 +91,8 @@
 			*************************************/
 			var isSuccessfulRender = g_vr.render();
 			/******************************************
-			* If you have a "normal" perspective camera
-			* then you'll want to add something like this:
+			* Normally you'd have a "normal" perspective camera
+			* in which case you'll want to add something like this:
 			*
 			* if(!isSuccessfulRender){
 			*	g_renderer.render( g_scene, boringMonoCamera );
@@ -100,6 +103,7 @@
 
 </head>
 <body>
+	<button id="start-button" >Start VR</button>
 	<div class="threejs-container"></div>
 </body>
 </html>
