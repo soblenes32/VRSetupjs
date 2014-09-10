@@ -250,3 +250,9 @@ VRSetup.prototype.render = function(){
 	return false;
 };
 
+
+VRSetup.prototype.reset = function(){
+	if (this.sensorDevice) {
+		this.sensorDevice.resetSensor();
+	}
+}
