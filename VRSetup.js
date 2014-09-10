@@ -59,6 +59,9 @@ function VRSetup(p_renderer, p_scene){
 	this.cameraLeft = new THREE.PerspectiveCamera( 75, 4/3, this.zNear, this.zFar );
 	this.cameraRight = new THREE.PerspectiveCamera( 75, 4/3, this.zNear, this.zFar );
 
+	// non VR camera
+	this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, this.zNear, this.zFar);
+
 	//Holders to save the original renderer size for when we exit rift mode. But...why would we ever want to do that?
 	this.oldRendererWidth = this.renderer.domElement.width;
 	this.oldRendererHeight = this.renderer.domElement.height;
@@ -222,6 +225,15 @@ VRSetup.prototype.updateVRDevice = function() {
 	this.cameraLeft.position.sub(this.eyeOffsetLeft); //.multiplyScalar(this.VR_POSITION_SCALE)
 	this.cameraRight.position.sub(this.eyeOffsetRight); //.multiplyScalar(this.VR_POSITION_SCALE)
 
+	this.camera.position.x = (vrState.position.x * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.x;
+	this.camera.position.y = (vrState.position.y * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.y;
+	this.camera.position.z = (vrState.position.z * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.z;
+
+	this.camera.quaternion.x = vrState.orientation.x;
+	this.camera.quaternion.y = vrState.orientation.y;
+	this.camera.quaternion.z = vrState.orientation.z;
+	this.camera.quaternion.w = vrState.orientation.w;
+
 	return true;
 };
 
@@ -231,8 +243,9 @@ VRSetup.prototype.updateVRDevice = function() {
  * If not, will return false and it's all up to you!
  *******************************************************************************************/
 VRSetup.prototype.render = function(){
+	this.updateVRDevice();
+
 	if (this.vrMode) {
-		this.updateVRDevice();
 		// Render left eye
 		this.renderer.enableScissorTest ( true );
 		this.renderer.setScissor( 0, 0, window.innerWidth / 2, window.innerHeight );
@@ -245,11 +258,14 @@ VRSetup.prototype.render = function(){
 		this.renderer.render(this.scene, this.cameraRight);
 
 		return true;
-	}
-	this.renderer.enableScissorTest (false);
-	return false;
-};
+	} else {
+		this.renderer.enableScissorTest (false);
+		this.renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
+		this.renderer.render(this.scene, this.camera);
 
+		return false;
+	}
+};
 
 VRSetup.prototype.reset = function(){
 	if (this.sensorDevice) {
