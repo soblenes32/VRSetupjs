@@ -82,7 +82,7 @@ function VRSetup(p_renderer, p_scene){
  *******************************************************************************************/
 VRSetup.prototype.RequestFullScreenVR = function(){
 	this.vrMode = true;
-	this.renderer.setSize( window.innerWidth, window.innerHeight );
+	
     if (this.renderer.domElement.webkitRequestFullscreen) {
     	this.renderer.domElement.webkitRequestFullscreen({ vrDisplay: this.hmdDevice });
     	document.addEventListener("webkitfullscreenchange", this.onFullscreenChange.bind(this), false);
@@ -101,6 +101,8 @@ VRSetup.prototype.onFullscreenChange = function(){
 		this.renderer.setSize(this.oldRendererWidth, this.oldRendererHeight);
 		document.removeEventListener("webkitfullscreenchange", this.onFullscreenChange, false);
 		document.removeEventListener("mozfullscreenchange", this.onFullscreenChange, false);
+} else {
+		this.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 };
 
