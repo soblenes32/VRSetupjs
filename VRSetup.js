@@ -77,6 +77,24 @@ function VRSetup(p_renderer, p_scene){
 	    //No supported VR browsers found
 		console.log("no supported browser api found");
 	}
+
+	// keyboard bindings
+	var vr = this;
+	window.onkeydown = function(ev) {
+      if (ev.keyCode == "R".charCodeAt(0))  {
+        vr.reset();
+        console.log("Resetting");
+      }
+
+      if (ev.keyCode == 187 || ev.keyCode == 61 || ev.keyCode == 107)  { // "+" key
+        vr.resizeFOV(0.1);
+    	console.log("FOV Scale: " + vr.fovScale);
+      }
+      if (ev.keyCode == 189 || ev.keyCode == 173 || ev.keyCode == 109)  { // "-" key
+       	vr.resizeFOV(-0.1);
+       	console.log("FOV Scale: " + vr.fovScale);
+      }
+    }
 };
 
 /*******************************************************************************************
