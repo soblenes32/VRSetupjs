@@ -223,34 +223,23 @@ VRSetup.prototype.updateVRDevice = function() {
 	if (!this.sensorDevice) return false;
 	var vrState = this.sensorDevice.getState();
 
-	this.cameraLeft.position.x = (vrState.position.x * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.x;
-	this.cameraLeft.position.y = (vrState.position.y * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.y;
-	this.cameraLeft.position.z = (vrState.position.z * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.z;
-	this.cameraRight.position.x = (vrState.position.x * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.x;;
-	this.cameraRight.position.y = (vrState.position.y * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.y;
-	this.cameraRight.position.z = (vrState.position.z * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.z;
+    this.camera.quaternion.x = vrState.orientation.x;
+    this.camera.quaternion.y = vrState.orientation.y;
+    this.camera.quaternion.z = vrState.orientation.z;
+    this.camera.quaternion.w = vrState.orientation.w;
 
-	this.cameraLeft.quaternion.x = vrState.orientation.x;
-	this.cameraLeft.quaternion.y = vrState.orientation.y;
-	this.cameraLeft.quaternion.z = vrState.orientation.z;
-	this.cameraLeft.quaternion.w = vrState.orientation.w;
+    this.camera.position.x = (vrState.position.x * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.x;
+    this.camera.position.y = (vrState.position.y * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.y;
+    this.camera.position.z = (vrState.position.z * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.z;
 
-	this.cameraRight.quaternion.x = vrState.orientation.x;
-	this.cameraRight.quaternion.y = vrState.orientation.y;
-	this.cameraRight.quaternion.z = vrState.orientation.z;
-	this.cameraRight.quaternion.w = vrState.orientation.w;
+    this.cameraLeft.quaternion.copy(this.camera.quaternion);
+    this.cameraRight.quaternion.copy(this.camera.quaternion);
 
-	this.cameraLeft.position.sub(this.eyeOffsetLeft); //.multiplyScalar(this.VR_POSITION_SCALE)
-	this.cameraRight.position.sub(this.eyeOffsetRight); //.multiplyScalar(this.VR_POSITION_SCALE)
+    this.cameraLeft.position.copy(this.camera.position);
+    this.cameraRight.position.copy(this.camera.position);
 
-	this.camera.position.x = (vrState.position.x * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.x;
-	this.camera.position.y = (vrState.position.y * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.y;
-	this.camera.position.z = (vrState.position.z * this.VR_POSITION_SCALE) + this.cameraGlobalPosition.z;
-
-	this.camera.quaternion.x = vrState.orientation.x;
-	this.camera.quaternion.y = vrState.orientation.y;
-	this.camera.quaternion.z = vrState.orientation.z;
-	this.camera.quaternion.w = vrState.orientation.w;
+    this.cameraLeft.position.add(this.eyeOffsetLeft.clone().applyQuaternion(this.camera.quaternion));
+    this.cameraRight.position.add(this.eyeOffsetRight.clone().applyQuaternion(this.camera.quaternion));
 
 	return true;
 };
