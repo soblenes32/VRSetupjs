@@ -107,7 +107,7 @@ VRSetup.prototype.RequestFullScreenVR = function(){
     if (this.renderer.domElement.webkitRequestFullscreen) {
     	this.renderer.domElement.webkitRequestFullscreen({ vrDisplay: this.hmdDevice });
     	document.addEventListener("webkitfullscreenchange", this.onFullscreenChange.bind(this), false);
-    } else if (renderer.domElement.mozRequestFullScreen) {
+    } else if (this.renderer.domElement.mozRequestFullScreen) {
     	this.renderer.domElement.mozRequestFullScreen({ vrDisplay: this.hmdDevice });
     	document.addEventListener("mozfullscreenchange", this.onFullscreenChange.bind(this), false);
     }
@@ -238,8 +238,11 @@ VRSetup.prototype.updateVRDevice = function() {
     this.cameraLeft.position.copy(this.camera.position);
     this.cameraRight.position.copy(this.camera.position);
 
-    this.cameraLeft.position.add(this.eyeOffsetLeft.clone().applyQuaternion(this.camera.quaternion));
-    this.cameraRight.position.add(this.eyeOffsetRight.clone().applyQuaternion(this.camera.quaternion));
+    this.eyeOffsetLeftV.copy(this.eyeOffsetLeft);
+    this.eyeOffsetRightV.copy(this.eyeOffsetRight);
+	
+    this.cameraLeft.position.add(this.eyeOffsetLeftV.applyQuaternion(this.camera.quaternion));
+    this.cameraRight.position.add(this.eyeOffsetRightV.applyQuaternion(this.camera.quaternion));
 
 	return true;
 };
